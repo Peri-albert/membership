@@ -1,0 +1,21 @@
+#coding: utf8
+
+import os
+
+DB_HOST = os.environ.get('_DB_HOST', 'db.dev.com')
+DB_NAME = os.environ.get('_DB_NAME', 'membership')
+DB_USER = os.environ.get('_DB_USER', 'membership')
+DB_PORT = os.environ.get('_DB_PORT', '3306')
+DB_PASSWORD = os.environ.get('_DB_PASSWORD', 'test')
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'mysql',
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': DB_HOST,
+        'PORT': DB_PORT
+    }
+}
+
