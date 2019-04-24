@@ -9,8 +9,8 @@ class Circle(models.Model):
 	name = models.CharField(default='', max_length=128) # 姓名
 	avatar = models.TextField(default='')  # 头像
 	created_at = models.DateTimeField(auto_now_add=True) # 创建时间
-	longitude = models.IntegerField(default=0) # 经度
-	latitude = models.IntegerField(default=0) # 纬度
+	longitude = models.FloatField(default=0) # 经度
+	latitude = models.FloatField(default=0) # 纬度
 	is_banned = models.BooleanField(default=False) # 禁用情况
 
 	class Meta(object):
