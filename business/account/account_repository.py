@@ -53,10 +53,11 @@ class AccountRepository(business.Service):
 		"""
 		获取成员账户列表
 		"""
-		db_models = circle_models.CircleMember.select().dj_where(circle_id=circle_id)
+		record_db_models = circle_models.CircleMember.select().dj_where(circle_id=circle_id)
 		account_ids = []
-		for db_model in db_models:
-			account_ids.append(db_model.account_id)
+		for record_db_model in record_db_models:
+			account_ids.append(record_db_model.account_id)
+
 		db_models = account_models.Account.select().dj_where(id__in=account_ids)
 		if filters:
 			db_models = db_models.dj_where(**filters)
@@ -66,3 +67,22 @@ class AccountRepository(business.Service):
 
 		db_models = db_models.order_by(account_models.Account.id.desc())
 		return [Account(db_model) for db_model in db_models]
+
+	def get_accounts_in_leaderboard(self, filters=None, target_page=None):
+		"""
+		获取排行榜上的用户列表
+		"""
+		record_db_models = circle_models.CircleMember.select().order_by(circle_models.CircleMember.duration.desc())
+		account_ids = []
+		for record_db_model in record_db_models:
+			account_ids.append(record_db_model.account_id)
+
+		db_models = account_models.Account.select().dj_where(id__in=account_ids)
+		if filters:
+			db_models = db_models.dj_where(**filters)
+
+		if target_page:
+			db_models = target_page.paginate(db_models)
+
+		id2account = {db_model.id: Account(db_model) for db_model in db_models}
+		return [id2account[account_id] for account_id in account_ids]

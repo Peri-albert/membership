@@ -19,10 +19,8 @@ class ACircles(ApiResource):
 		"""
 		user = self.params['user']
 		target_page = TargetPage(self.params)
-		circles = CircleRepository(user).get_circles(
-			self.params.get('filters'),
-			target_page
-		)
+		filters = self.params.get('filters')
+		circles = CircleRepository(user).get_circles(filters, target_page)
 		return {
 			'circles': [EncodeCircleService(user).encode(circle) for circle in circles],
 			'page_info': target_page.to_dict() if target_page else {}
