@@ -37,9 +37,10 @@ class AccountStatus(models.Model):
 	"""
 	账户状态：签到/未签到
 	"""
-	account_id = models.IntegerField(default=0)
-	is_checked_in = models.BooleanField(default=False)
+	account_id = models.IntegerField(default=0) # 账户id
+	is_checked_in = models.BooleanField(default=False) # 签到情况
+	duration = models.IntegerField(default=1) # 持续时长
 
 	class Meta(object):
-		table_name = 'account_account_status'
+		table_name = 'account_status'
 

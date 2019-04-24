@@ -12,6 +12,7 @@ from rust.core.exceptions import BusinessError
 from business.account.account_repository import AccountRepository
 from business.account.account_factory import AccountFactory
 from business.account.encode_account_service import EncodeAccountService
+from business.account.fill_account_service import FillAccountService
 
 
 @Resource('account.account')
@@ -19,17 +20,29 @@ class AAccount(ApiResource):
 	"""
 	账户
 	"""
-	@param_required(['user'])
+	@param_required(['user', '?id', '?with_options:json'])
 	def get(self):
+		"""
+		根据账户id获取账户，否则根据rust用户token登录机制获取自身账户
+		"""
 		user = self.params['user']
-		account = AccountRepository(user).get_account_by_user_id()
+		if self.params.get('id'):
+			id = self.params['id']
+			account = AccountRepository(user).get_account_by_id(id)
+		else:
+			account = AccountRepository(user).get_account_by_user_id()
+		fill_option = self.params.get('with_options', {'with_status': False})
 		if not account:
 			return 500, u'账户不存在'
 		else:
+			FillAccountService(user).fill([account], fill_option)
 			return EncodeAccountService(user).encode(account)
 
 	@param_required(['app_id', 'code', '?name', '?country', '?province', '?city', '?avatar', '?gender'])
 	def put(self):
+		"""
+		依据微信小程序创建账户
+		"""
 		app_id = self.params['app_id']
 		app_secret = settings.APPID2SECRET[app_id]
 		code = self.params['code']
@@ -65,6 +78,9 @@ class AAccount(ApiResource):
 
 	@param_required(['user', '?name', '?country', '?province', '?city', '?avatar', '?gender', '?birthday', '?age'])
 	def post(self):
+		"""
+		修改账户
+		"""
 		user = self.params['user']
 		param_object = ParamObject({
 			'name': self.params.get('name'),

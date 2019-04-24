@@ -5,7 +5,9 @@ from rust.core import business
 from db.circle import models as circle_models
 
 class Circle(business.Model):
-
+	"""
+	圈子
+	"""
 	__slots__ = (
 		'id',
 		'name',
@@ -18,12 +20,10 @@ class Circle(business.Model):
 	def __init__(self, db_model=None):
 		super(Circle, self).__init__(db_model)
 
-	def get_member_account_ids(self, circle_id):
+	@property
+	def member_counts(self):
 		"""
-		获取成员账户列表
+		成员数量
 		"""
-		db_models = circle_models.CircleMember.select().dj_where(circle_id=circle_id)
-		account_ids = []
-		for db_model in db_models:
-			account_ids.append(db_model.account_id)
-		return account_ids
+		member_counts = circle_models.CircleMember.select().dj_where(circle_id=self.id).count()
+		return member_counts

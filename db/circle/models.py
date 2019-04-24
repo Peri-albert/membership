@@ -26,5 +26,5 @@ class CircleMember(models.Model):
 	is_checked_in = models.BooleanField(default=False)  # 打卡情况
 
 	class Meta(object):
-		table_name = 'circle_circle_member'
+		table_name = 'circle_member'
 

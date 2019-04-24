@@ -16,6 +16,9 @@ class ACircle(ApiResource):
 	"""
 	@param_required(['user', 'id:int'])
 	def get(self):
+		"""
+		获取圈子详情
+		"""
 		user = self.params['user']
 		circle = CircleRepository(user).get_circle_by_id(self.params['id'])
 		if not circle:
@@ -59,18 +62,3 @@ class ACircle(ApiResource):
 		})
 		CircleFactory(user).update(param_object)
 		return {}
-
-	@param_required(['user', 'id:int'])
-	def delete(self):
-		"""
-		禁用圈子(限管理员操作)
-		"""
-		if not self.params['user'].is_manager:
-			raise BusinessError(u'操作无权限')
-		user = self.params['user']
-		param_object = ParamObject({
-			'id': self.params['id']
-		})
-		CircleFactory(user).delete(param_object)
-		return {}
-

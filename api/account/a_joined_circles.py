@@ -14,20 +14,17 @@ class AJoinedCircles(ApiResource):
 	"""
 	加入的圈子列表
 	"""
-
 	@param_required(['user', '?page:int', '?count_per_page:int', '?filters:json'])
 	def get(self):
+		"""
+		获取加入的圈子列表
+		"""
 		user = self.params['user']
 		filters = self.params.get('filters')
 		target_page = TargetPage(self.params)
 		account = AccountRepository(user).get_account_by_user_id()
-		if not account:
-			return 500, u'账户不存在'
-		else:
-			circle_ids = account.get_joined_circle_ids(account.id)
-			filters['id__in'] = circle_ids
-			circles = CircleRepository(user).get_circles(filters, target_page)
-			return {
-				'circles': [EncodeCircleService(user).encode(circle) for circle in circles],
-				'page_info': target_page.to_dict() if target_page else {}
-			}
+		circles = CircleRepository(user).get_joined_circles_by_account_id(account.id, filters, target_page)
+		return {
+			'circles': [EncodeCircleService(user).encode(circle) for circle in circles],
+			'page_info': target_page.to_dict() if target_page else {}
+		}

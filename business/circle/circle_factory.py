@@ -7,7 +7,9 @@ from business.circle.circle import Circle
 from db.circle import models as circle_models
 
 class CircleFactory(business.Service):
-
+	"""
+	圈子工厂
+	"""
 	def create(self, param_object):
 		if circle_models.Circle.select().dj_where(name=param_object.name).first():
 			raise BusinessError('existed')
@@ -41,12 +43,4 @@ class CircleFactory(business.Service):
 			modified = True
 
 		modified and db_model.save()
-
-	def delete(self, param_object):
-		"""
-		根据逻辑删除圈子
-		"""
-		circle_models.Circle.update(
-			is_banned = True
-		).dj_where(id=param_object.id).execute()
 

@@ -6,7 +6,6 @@ class EncodeAccountService(business.Service):
 	"""
 	封装账户Account数据的服务
 	"""
-
 	def encode(self, account):
 		data = {
 			'id': account.id,
@@ -20,4 +19,12 @@ class EncodeAccountService(business.Service):
 			'gender': account.gender,
 			'token': account.token
 		}
+
+		if account.status:
+			data['status'] = []
+			data['status'].append({
+				'is_checked_in': account.status.is_checked_in,
+				'duration': account.status.duration
+			})
+
 		return data
