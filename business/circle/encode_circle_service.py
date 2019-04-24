@@ -11,8 +11,8 @@ class EncodeCircleService(business.Service):
 			'id': circle.id,
 			'name': circle.name,
 			'avatar': circle.avatar,
-			'longitude': circle.gender,
-			'latitude': circle.token,
+			'longitude': circle.longitude,
+			'latitude': circle.latitude,
 			'member_counts': circle.member_counts
 		}
 		return data

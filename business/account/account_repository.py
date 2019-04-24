@@ -46,7 +46,7 @@ class AccountRepository(business.Service):
 		if target_page:
 			db_models = target_page.paginate(db_models)
 
-		db_models = db_models.order_by(account_models.Account.id.desc())
+		db_models = db_models.order_by('-id')
 		return [Account(db_model) for db_model in db_models]
 
 	def get_accounts_by_circle_id(self, circle_id, filters=None, target_page=None):
@@ -65,14 +65,14 @@ class AccountRepository(business.Service):
 		if target_page:
 			db_models = target_page.paginate(db_models)
 
-		db_models = db_models.order_by(account_models.Account.id.desc())
+		db_models = db_models.order_by('-id')
 		return [Account(db_model) for db_model in db_models]
 
 	def get_accounts_in_leaderboard(self, filters=None, target_page=None):
 		"""
 		获取排行榜上的用户列表
 		"""
-		record_db_models = circle_models.CircleMember.select().order_by(circle_models.CircleMember.duration.desc())
+		record_db_models = circle_models.CircleMember.select().order_by('-duration')
 		account_ids = []
 		for record_db_model in record_db_models:
 			account_ids.append(record_db_model.account_id)

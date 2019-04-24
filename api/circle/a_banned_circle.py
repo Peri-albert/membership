@@ -7,6 +7,7 @@ from rust.core.exceptions import BusinessError
 
 from business.circle.ban_service import BanService
 
+
 @Resource('circle.banned_circle')
 class ABannedCircle(ApiResource):
 	"""

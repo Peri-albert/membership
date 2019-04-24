@@ -9,6 +9,7 @@ from business.circle.circle_repository import CircleRepository
 from business.circle.circle_factory import CircleFactory
 from business.circle.encode_circle_service import EncodeCircleService
 
+
 @Resource('circle.circle')
 class ACircle(ApiResource):
 	"""

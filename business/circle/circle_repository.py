@@ -29,7 +29,7 @@ class CircleRepository(business.Service):
 		if target_page:
 			db_models = target_page.paginate(db_models)
 
-		db_models = db_models.order_by(circle_models.Circle.id.desc())
+		db_models = db_models.order_by('-id')
 		return [Circle(db_model) for db_model in db_models]
 
 	def get_banned_circles(self, filters=None, target_page=None):
@@ -43,7 +43,7 @@ class CircleRepository(business.Service):
 		if target_page:
 			db_models = target_page.paginate(db_models)
 
-		db_models = db_models.order_by(circle_models.Circle.id.desc())
+		db_models = db_models.order_by('-id')
 		return [Circle(db_model) for db_model in db_models]
 
 	def get_joined_circles_by_account_id(self, account_id, filters=None, target_page=None):
@@ -62,5 +62,5 @@ class CircleRepository(business.Service):
 		if target_page:
 			db_models = target_page.paginate(db_models)
 
-		db_models = db_models.order_by(circle_models.Circle.id.desc())
+		db_models = db_models.order_by('-id')
 		return [Circle(db_model) for db_model in db_models]

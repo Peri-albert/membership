@@ -8,6 +8,7 @@ from rust.core.exceptions import BusinessError
 from business.circle.circle_repository import CircleRepository
 from business.circle.encode_circle_service import EncodeCircleService
 
+
 @Resource('circle.banned_circles')
 class ABannedCircles(ApiResource):
 	"""
