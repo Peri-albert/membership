@@ -3,8 +3,8 @@
 import os
 
 DB_HOST = os.environ.get('_DB_HOST', 'db.dev.com')
-DB_NAME = os.environ.get('_DB_NAME', 'membership')
-DB_USER = os.environ.get('_DB_USER', 'membership')
+DB_NAME = os.environ.get('_DB_NAME', 'rust')
+DB_USER = os.environ.get('_DB_USER', 'ruster')
 DB_PORT = os.environ.get('_DB_PORT', '3306')
 DB_PASSWORD = os.environ.get('_DB_PASSWORD', 'test')
 
