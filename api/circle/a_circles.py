@@ -1,4 +1,4 @@
-#coding: utf8
+# coding: utf8
 
 from rust.core.api import ApiResource, Resource
 from rust.core.decorator import param_required
@@ -6,6 +6,7 @@ from rust.core.paginator import TargetPage
 
 from business.circle.circle_repository import CircleRepository
 from business.circle.encode_circle_service import EncodeCircleService
+
 
 @Resource('circle.circles')
 class ACircles(ApiResource):

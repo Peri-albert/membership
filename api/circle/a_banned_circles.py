@@ -1,4 +1,4 @@
-#coding: utf8
+# coding: utf8
 
 from rust.core.api import ApiResource, Resource
 from rust.core.decorator import param_required

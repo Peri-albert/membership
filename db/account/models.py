@@ -1,4 +1,4 @@
-#coding: utf8
+# coding: utf8
 
 from rust.core import db as models
 
@@ -13,6 +13,7 @@ GENDER2TEXT = {
 	GENDER['MALE']: 'male',
 	GENDER['FEMALE']: 'female'
 }
+
 
 class Account(models.Model):
 	"""
@@ -32,6 +33,7 @@ class Account(models.Model):
 
 	class Meta(object):
 		table_name = 'account_account'
+
 
 class AccountStatus(models.Model):
 	"""

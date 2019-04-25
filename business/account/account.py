@@ -1,4 +1,4 @@
-#coding: utf8
+# coding: utf8
 
 from rust.core import business
 from rust.resources.business.user.login_service import LoginService as UserLoginService

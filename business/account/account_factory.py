@@ -1,4 +1,4 @@
-#coding: utf8
+# coding: utf8
 
 from rust.core import business
 from rust.core.exceptions import BusinessError

@@ -1,6 +1,7 @@
-#coding: utf8
+# coding: utf8
 
 from rust.core import db as models
+
 
 class Circle(models.Model):
 	"""
@@ -15,6 +16,7 @@ class Circle(models.Model):
 
 	class Meta(object):
 		table_name = 'circle_circle'
+
 
 class CircleMember(models.Model):
 	"""
