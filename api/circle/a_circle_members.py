@@ -23,11 +23,9 @@ class ACircleMembers(ApiResource):
 		filters = self.params.get('filters')
 		target_page = TargetPage(self.params)
 		circle = CircleRepository(user).get_circle_by_id(self.params['circle_id'])
-		if not circle:
-			return 500, u'圈子不存在'
-		else:
-			accounts = AccountRepository(user).get_accounts_by_circle_id(circle.id, filters, target_page)
-			return {
-				'accounts': [EncodeAccountService(user).encode(account) for account in accounts],
-				'page_info': target_page.to_dict() if target_page else {}
-			}
+
+		accounts = AccountRepository(user).get_accounts_by_circle_id(circle.id, filters, target_page)
+		return {
+			'accounts': [EncodeAccountService(user).encode(account) for account in accounts],
+			'page_info': target_page.to_dict() if target_page else {}
+		}

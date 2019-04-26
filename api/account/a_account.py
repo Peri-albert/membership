@@ -31,12 +31,10 @@ class AAccount(ApiResource):
 			account = AccountRepository(user).get_account_by_id(id)
 		else:
 			account = AccountRepository(user).get_account_by_user_id()
+
 		fill_option = self.params.get('with_options', {'with_status': False})
-		if not account:
-			return 500, u'账户不存在'
-		else:
-			FillAccountService(user).fill([account], fill_option)
-			return EncodeAccountService(user).encode(account)
+		FillAccountService(user).fill([account], fill_option)
+		return EncodeAccountService(user).encode(account)
 
 	@param_required(['app_id', 'code', '?name', '?country', '?province', '?city', '?avatar', '?gender'])
 	def put(self):

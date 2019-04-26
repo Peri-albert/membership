@@ -22,16 +22,14 @@ class ACircle(ApiResource):
 		account_longitude = self.params['longitude']
 		account_latitude = self.params['latitude']
 		circle = CircleRepository(user).get_circle_by_id(self.params['id'])
-		if not circle:
-			return 500, u'圈子不存在'
-		else:
-			circle_longitude = circle.longitude
-			circle_latitude = circle.latitude
-			param_object = ParamObject({
-				'account_longitude': account_longitude,
-				'account_latitude': account_latitude,
-				'circle_longitude': circle_longitude,
-				'circle_latitude': circle_latitude
-			})
-			distance = CalculateDistanceService(user).get_distance(param_object)
-			return distance
+		circle_longitude = circle.longitude
+		circle_latitude = circle.latitude
+
+		param_object = ParamObject({
+			'account_longitude': account_longitude,
+			'account_latitude': account_latitude,
+			'circle_longitude': circle_longitude,
+			'circle_latitude': circle_latitude
+		})
+		distance = CalculateDistanceService(user).get_distance(param_object)
+		return distance

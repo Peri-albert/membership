@@ -22,10 +22,8 @@ class ACircle(ApiResource):
 		"""
 		user = self.params['user']
 		circle = CircleRepository(user).get_circle_by_id(self.params['id'])
-		if not circle:
-			return 500, u'圈子不存在'
-		else:
-			return EncodeCircleService(user).encode(circle)
+
+		return EncodeCircleService(user).encode(circle)
 
 	@param_required(['user', 'name', 'avatar', '?longitude', '?latitude'])
 	def put(self):
