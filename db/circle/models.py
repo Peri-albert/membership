@@ -7,7 +7,7 @@ class Circle(models.Model):
 	"""
 	圈子
 	"""
-	name = models.CharField(default='', max_length=128) # 姓名
+	name = models.CharField(default='', max_length=128) # 名称
 	avatar = models.TextField(default='')  # 头像
 	created_at = models.DateTimeField(auto_now_add=True) # 创建时间
 	longitude = models.FloatField(default=0) # 经度
