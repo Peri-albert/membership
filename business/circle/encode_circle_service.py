@@ -31,4 +31,5 @@ class EncodeCircleService(business.Service):
 					'avatar': member.avatar,
 					'gender': member.gender,
 				})
+
 		return data
