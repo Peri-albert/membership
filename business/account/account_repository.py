@@ -73,9 +73,7 @@ class AccountRepository(business.Service):
 		获取排行榜上的用户列表
 		"""
 		record_db_models = circle_models.CircleMember.select().order_by('-duration')
-		account_ids = []
-		for record_db_model in record_db_models:
-			account_ids.append(record_db_model.account_id)
+		account_ids = [record_db_model.account_id for record_db_model in record_db_models]
 
 		db_models = account_models.Account.select().dj_where(id__in=account_ids)
 		if filters:
