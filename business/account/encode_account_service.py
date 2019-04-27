@@ -17,11 +17,11 @@ class EncodeAccountService(business.Service):
 			'country': account.country,
 			'avatar': account.avatar,
 			'gender': account.gender,
-			'token': account.token
+			'token': account.token,
+			'status': []
 		}
 
 		if account.status:
-			data['status'] = []
 			data['status'].append({
 				'is_checked_in': account.status.is_checked_in,
 				'duration': account.status.duration

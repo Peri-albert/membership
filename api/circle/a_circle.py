@@ -7,6 +7,7 @@ from rust.core.exceptions import BusinessError
 
 from business.circle.circle_repository import CircleRepository
 from business.circle.circle_factory import CircleFactory
+from business.circle.fill_circle_service import FillCircleService
 from business.circle.encode_circle_service import EncodeCircleService
 
 
@@ -15,13 +16,16 @@ class ACircle(ApiResource):
 	"""
 	圈子
 	"""
-	@param_required(['user', 'id:int'])
+	@param_required(['user', 'id:int', '?with_options:json'])
 	def get(self):
 		"""
 		获取圈子详情
 		"""
 		user = self.params['user']
 		circle = CircleRepository(user).get_circle_by_id(self.params['id'])
+
+		fill_option = self.params.get('with_options', {'with_member': False})
+		FillCircleService(user).fill([circle], fill_option)
 
 		return EncodeCircleService(user).encode(circle)
 

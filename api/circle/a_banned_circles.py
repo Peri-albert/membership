@@ -6,6 +6,7 @@ from rust.core.paginator import TargetPage
 from rust.core.exceptions import BusinessError
 
 from business.circle.circle_repository import CircleRepository
+from business.circle.fill_circle_service import FillCircleService
 from business.circle.encode_circle_service import EncodeCircleService
 
 
@@ -22,6 +23,10 @@ class ABannedCircles(ApiResource):
 		target_page = TargetPage(self.params)
 		filters = self.params.get('filters')
 		circles = CircleRepository(user).get_banned_circles(filters, target_page)
+
+		fill_option = self.params.get('with_options', {'with_member': False})
+		FillCircleService(user).fill(circles, fill_option)
+
 		return {
 			'circles': [EncodeCircleService(user).encode(circle) for circle in circles],
 			'page_info': target_page.to_dict() if target_page else {}

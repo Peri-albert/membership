@@ -13,6 +13,22 @@ class EncodeCircleService(business.Service):
 			'avatar': circle.avatar,
 			'longitude': circle.longitude,
 			'latitude': circle.latitude,
-			'member_counts': circle.member_counts
+			'members':[],
+			'member_amount': 0
 		}
+
+		if circle.members:
+			data['member_amount'] = circle.member_amount
+			for member in circle.members:
+				data['members'].append({
+					'id': member.id,
+					'name': member.name,
+					'birthday': member.birthday,
+					'age': member.age,
+					'city': member.city,
+					'province': member.province,
+					'country': member.country,
+					'avatar': member.avatar,
+					'gender': member.gender,
+				})
 		return data
