@@ -27,6 +27,8 @@ class CircleFactory(business.Service):
 		db_model = circle_models.Circle.select().dj_where(id=param_object.id).first()
 		modified = False
 		if param_object.name is not None and db_model.name != param_object.name:
+			if circle_models.Circle.select().dj_where(name=param_object.name).first():
+				raise BusinessError('existed')
 			db_model.name = param_object.name
 			modified = True
 
