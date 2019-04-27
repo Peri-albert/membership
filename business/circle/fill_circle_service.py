@@ -11,7 +11,6 @@ class FillCircleService(business.Service):
 
 
 	def __fill_member_data(self, circles):
-		id2circle = {circle.id: circle for circle in circles}
 
 		circle_ids = [circle.id for circle in circles]
 		record_db_models = circle_models.CircleMember.select().dj_where(circle_id__in=circle_ids).order_by('id')
