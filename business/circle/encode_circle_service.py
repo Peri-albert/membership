@@ -13,7 +13,7 @@ class EncodeCircleService(business.Service):
 			'avatar': circle.avatar,
 			'longitude': circle.longitude,
 			'latitude': circle.latitude,
-			'members':[],
+			'members': [],
 			'member_amount': 0
 		}
 
