@@ -19,7 +19,7 @@ class Account(models.Model):
 	"""
 	账户
 	"""
-	name = models.CharField(default='', max_length=128) # 姓名
+	name = models.CharField(default='', max_length=128) # 名称
 	created_at = models.DateTimeField(auto_now_add=True) # 创建时间
 	country = models.CharField(default='', max_length=128) # 国家
 	province = models.CharField(default='', max_length=128) # 省份
