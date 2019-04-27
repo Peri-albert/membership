@@ -11,9 +11,7 @@ from db.account import models as account_models
 
 class FillCircleService(business.Service):
 
-
 	def __fill_member_data(self, circles):
-
 		circle_ids = [circle.id for circle in circles]
 		record_db_models = circle_models.CircleMember.select().dj_where(circle_id__in=circle_ids)
 		account_ids = [record_db_model.account_id for record_db_model in record_db_models]
