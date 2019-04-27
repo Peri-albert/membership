@@ -15,8 +15,8 @@ class JoinInService(business.Service):
 		加入圈子
 		"""
 		if circle_models.CircleMember.select().dj_where(
-				account_id=param_object.account_id,
-				circle_id=param_object.circle_id
+			account_id=param_object.account_id,
+			circle_id=param_object.circle_id
 		).exists():
 			raise BusinessError('existed')
 		else:
