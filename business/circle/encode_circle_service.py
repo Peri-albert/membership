@@ -2,11 +2,15 @@
 
 from rust.core import business
 
+
 class EncodeCircleService(business.Service):
 	"""
 	封装圈子Circle数据的服务
 	"""
 	def encode(self, circle):
+		"""
+		封装圈子Circle数据
+		"""
 		data = {
 			'id': circle.id,
 			'name': circle.name,

@@ -27,4 +27,5 @@ class CalculateDistanceService(business.Service):
 		distance_longitude = circle_longitude - account_longitude
 		distance_latitude = circle_latitude - account_latitude
 		angle = sin(distance_latitude / 2) ** 2 + cos(account_latitude) * cos(circle_latitude) * sin(distance_longitude / 2) ** 2
-		return 2000 * asin(sqrt(angle)) * EARTH_RADIUS
+		distance = 2000 * asin(sqrt(angle)) * EARTH_RADIUS
+		return distance

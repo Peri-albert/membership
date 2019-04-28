@@ -6,6 +6,7 @@ from rust.resources.db.user import models as user_models
 
 from db.account import models as account_models
 
+
 class Account(business.Model):
 	"""
 	账户
