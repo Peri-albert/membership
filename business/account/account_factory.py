@@ -54,8 +54,8 @@ class AccountFactory(business.Service):
 			db_model.avatar = param_object.avatar
 			modified = True
 
-		if param_object.gender is not None and db_model.gender != param_object.gender:
-			db_model.gender = param_object.gender
+		if param_object.gender is not None and db_model.gender != account_models.GENDER[param_object.gender.upper()]:
+			db_model.gender = account_models.GENDER[param_object.gender.upper()]
 			modified = True
 
 		if param_object.birthday is not None and db_model.birthday != param_object.birthday:
