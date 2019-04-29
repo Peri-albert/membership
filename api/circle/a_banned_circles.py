@@ -17,6 +17,9 @@ class ABannedCircles(ApiResource):
 	"""
 	@param_required(['user', '?page:int', '?count_per_page:int', '?filters:json'])
 	def get(self):
+		"""
+		获取禁用的圈子列表(限管理员操作)
+		"""
 		if not self.params['user'].is_manager:
 			raise BusinessError(u'操作无权限')
 		user = self.params['user']

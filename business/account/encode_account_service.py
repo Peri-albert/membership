@@ -2,11 +2,15 @@
 
 from rust.core import business
 
+
 class EncodeAccountService(business.Service):
 	"""
 	封装账户Account数据的服务
 	"""
 	def encode(self, account):
+		"""
+		封装账户Account数据
+		"""
 		data = {
 			'id': account.id,
 			'name': account.name,

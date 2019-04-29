@@ -5,9 +5,8 @@ from rust.core.decorator import param_required
 from rust.core.paginator import TargetPage
 
 from business.account.encode_account_service import EncodeAccountService
-from business.circle.circle_repository import CircleRepository
 from business.account.account_repository import AccountRepository
-
+from business.circle.circle_repository import CircleRepository
 
 @Resource('circle.members')
 class ACircleMembers(ApiResource):

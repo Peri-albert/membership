@@ -4,8 +4,9 @@ from rust.core import business
 
 from business.account.account import Account
 
-from db.account import models as account_models
 from db.circle import models as circle_models
+from db.account import models as account_models
+
 
 class AccountRepository(business.Service):
 	"""
@@ -13,7 +14,7 @@ class AccountRepository(business.Service):
 	"""
 	def get_account_by_id(self, account_id):
 		"""
-		根据id获取account对象
+		根据id获取账户
 		"""
 		db_model = account_models.Account.select().dj_where(id=account_id).first()
 		if db_model:
@@ -21,7 +22,7 @@ class AccountRepository(business.Service):
 
 	def get_account_by_openid(self, openid):
 		"""
-		根据openid获取account对象
+		根据openid获取账户
 		"""
 		db_model = account_models.Account.select().dj_where(openid=openid).first()
 		if db_model:
@@ -29,7 +30,7 @@ class AccountRepository(business.Service):
 
 	def get_account_by_user_id(self):
 		"""
-		根据user_id获取account对象
+		根据user_id获取账户
 		"""
 		db_model = account_models.Account.select().dj_where(user_id=self.user.id).first()
 		if db_model:
@@ -37,7 +38,7 @@ class AccountRepository(business.Service):
 
 	def get_accounts(self, filters=None, target_page=None):
 		"""
-		获取用户列表
+		获取账户列表
 		"""
 		db_models = account_models.Account.select()
 		if filters:
@@ -70,7 +71,7 @@ class AccountRepository(business.Service):
 
 	def get_accounts_in_leaderboard(self, filters=None, target_page=None):
 		"""
-		获取排行榜上的用户列表
+		获取排行榜上的账户列表
 		"""
 		record_db_models = circle_models.CircleMember.select().order_by('-duration')
 		account_ids = [record_db_model.account_id for record_db_model in record_db_models]

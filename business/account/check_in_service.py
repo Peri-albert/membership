@@ -5,6 +5,7 @@ from rust.core.exceptions import BusinessError
 
 from db.account import models as account_models
 
+
 class CheckInService(business.Service):
 	"""
 	账户签到服务

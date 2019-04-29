@@ -6,11 +6,15 @@ from rust.core.exceptions import BusinessError
 from business.circle.circle import Circle
 from db.circle import models as circle_models
 
+
 class CircleFactory(business.Service):
 	"""
 	圈子工厂
 	"""
 	def create(self, param_object):
+		"""
+		创建Circle对象
+		"""
 		if circle_models.Circle.select().dj_where(name=param_object.name).first():
 			raise BusinessError('existed')
 
@@ -24,6 +28,9 @@ class CircleFactory(business.Service):
 		return Circle(db_model)
 
 	def update(self, param_object):
+		"""
+		更新Circle对象
+		"""
 		db_model = circle_models.Circle.select().dj_where(id=param_object.id).first()
 		modified = False
 		if param_object.name is not None and db_model.name != param_object.name:

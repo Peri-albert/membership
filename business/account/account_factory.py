@@ -6,6 +6,7 @@ from rust.core.exceptions import BusinessError
 from business.account.account import Account
 from db.account import models as account_models
 
+
 class AccountFactory(business.Service):
 	"""
 	账户工厂
@@ -30,7 +31,7 @@ class AccountFactory(business.Service):
 
 	def update(self, param_object):
 		"""
-		更新account对象
+		更新Account对象
 		"""
 		db_model = account_models.Account.select().dj_where(user_id=self.user.id).first()
 		modified = False
