@@ -1,0 +1,988 @@
+openapi: 3.0.0
+servers:
+  - description: 享趣社区的用户微服务URI
+    url: '{protocol}://www.mindinn.top/membership'
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: https
+
+info:
+  description: 享趣社区的用户微服务
+  version: "1.0.0"
+  title: Mindinn Membership Microservice
+  contact:
+    email: albertgandolf@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+
+tags:
+  - name: 管理员
+    description: 限管理员权限操作
+  - name: 用户
+    description: 常规操作
+
+paths:
+  /account/account:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - 用户
+      summary: 返回封装好的账户对象
+      description: |
+        根据账户id获取账户，否则根据rust用户token登录机制获取自身账户
+      parameters:
+        - in: query
+          name: id
+          description: 账户id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: with_options
+          description: 填充参数
+          required: false
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  with_status:
+                    type: boolean
+                default:
+                  with_options: {'with_status': false}
+      responses:
+        '200':
+          description: 返回与搜索结果匹配的账户对象
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '531':
+          $ref: '#/components/responses/Unauthorized'
+        '533':
+          $ref: '#/components/responses/Unauthorized'
+
+    put:
+      tags:
+        - 用户
+      summary: 依据微信小程序创建账户
+      description: |
+        依据微信小程序提供的code经过[微信服务器](https://api.weixin.qq.com/sns/jscode2session)进行转换为wx.openid以及一些基础用户信息，从而创建系统用户及账户
+      responses:
+        '200':
+          description: 创建成功，返回账户的id和用户token
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WX_Account'
+        description: 微信端创建账户请求体
+
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - 用户
+      summary: 修改账户信息
+      description: |
+        用户后期进入系统后修改自身账户信息
+      responses:
+        '200':
+          description: 修改成功
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdatedAccount'
+        description: 修改账户请求体
+
+  /account/checked_in_account:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - 用户
+      summary: 账户签到
+      description: |
+        用户登录系统后进行账户签到
+      responses:
+        '200':
+          description: 签到成功
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /account/joined_circle:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - 用户
+      summary: 账户加入圈子
+      description: |
+        用户登录系统后根据圈子id加入圈子
+      responses:
+        '200':
+          description: 加入成功
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                circle_id:
+                  type: integer
+        description: 账户加入圈子的请求体
+
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - 用户
+      summary:
+        退出圈子
+      description: |
+        用户登录系统后根据圈子id退出圈子
+      parameters:
+        - in: query
+          name: circle_id
+          description: 圈子id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 此账户已经退出圈子
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /account/joined_circles:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - 用户
+      summary: 返回账户加入的圈子列表
+      description: |
+        根据rust用户对应的自身账户获取加入的圈子列表
+      parameters:
+        - in: query
+          name: page
+          description: 分页参数，总页码
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: count_per_page
+          description: 分页参数，每页数目
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: filters
+          description: 过滤参数
+          required: false
+          content:
+            application/json:
+              schema:
+                type: object
+      responses:
+        '200':
+          description: 返回与搜索结果匹配的圈子对象列表
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - circles
+                  - page_info
+                properties:
+                  circles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Circle'
+                  page_info:
+                    $ref: '#/components/schemas/PageInfo'
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /account/leaderboard:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - 用户
+      summary: 返回账户排行榜
+      description: |
+        获取账户签到排行榜
+      parameters:
+        - in: query
+          name: page
+          description: 分页参数，总页码
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: count_per_page
+          description: 分页参数，每页数目
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: filters
+          description: 过滤参数
+          required: false
+          content:
+            application/json:
+              schema:
+                type: object
+      responses:
+        '200':
+          description: 返回排行榜上的账户列表
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - accounts
+                  - page_info
+                properties:
+                  accounts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Account'
+                  page_info:
+                    $ref: '#/components/schemas/PageInfo'
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /circle/circle:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - 用户
+      summary: 返回封装好的圈子对象
+      description: |
+        根据圈子id获取圈子信息
+      parameters:
+        - in: query
+          name: id
+          description: 圈子id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: with_options
+          description: 填充参数
+          required: false
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  with_status:
+                    type: boolean
+                default:
+                  with_options: {'with_members': false}
+      responses:
+        '200':
+          description: 返回与搜索结果匹配的圈子对象
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Circle'
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - 管理员
+      description: |
+        创建圈子，限制管理员操作
+      responses:
+        '200':
+          description: 创建成功，返回圈子的id
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreatedCircle'
+        description: 创建圈子请求体
+
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - 管理员
+      description: |
+        更新圈子信息，限制管理员操作
+      responses:
+        '200':
+          description: 更新成功
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UpdatedCircle'
+        description: 更新圈子请求体
+
+  /circle/circles:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - 用户
+      summary: 返回圈子列表
+      description: |
+        返回圈子对象的集合
+      parameters:
+        - in: query
+          name: with_options
+          description: 填充参数
+          required: false
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  with_member:
+                    type: boolean
+                default:
+                  with_options: {'with_member': false}
+        - in: query
+          name: page
+          description: 分页参数，总页码
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: count_per_page
+          description: 分页参数，每页数目
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: filters
+          description: 过滤参数
+          required: false
+          content:
+            application/json:
+              schema:
+                type: object
+      responses:
+        '200':
+          description: 返回圈子对象列表
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - circles
+                  - page_info
+                properties:
+                  circles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Circle'
+                  page_info:
+                    $ref: '#/components/schemas/PageInfo'
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /circle/banned_circle:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - 管理员
+      summary: 禁用圈子
+      description: |
+        禁用圈子，限管理员操作
+      responses:
+        '200':
+          description: 禁用成功
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                circle_id:
+                  type: integer
+        description: 禁用圈子的请求体
+
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - 管理员
+      summary:
+        解禁圈子
+      description: |
+        解禁圈子，限管理员操作
+      parameters:
+        - in: query
+          name: circle_id
+          description: 圈子id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 圈子已被解除禁用
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /circle/banned_circles:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - 管理员
+      summary: 返回被禁用的圈子列表
+      description: |
+        返回被禁用的圈子对象的集合
+      parameters:
+        - in: query
+          name: with_options
+          description: 填充参数
+          required: false
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  with_member:
+                    type: boolean
+                default:
+                  with_options: {'with_member': false}
+        - in: query
+          name: page
+          description: 分页参数，总页码
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: count_per_page
+          description: 分页参数，每页数目
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: filters
+          description: 过滤参数
+          required: false
+          content:
+            application/json:
+              schema:
+                type: object
+      responses:
+        '200':
+          description: 返回被禁用的圈子对象列表
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - circles
+                  - page_info
+                properties:
+                  circles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Circle'
+                  page_info:
+                    $ref: '#/components/schemas/PageInfo'
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /circle/checked_in_member:
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - 用户
+      summary: 圈子签到
+      description: |
+        用户登录系统后进行圈子签到
+      responses:
+        '200':
+          description: 签到成功
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                circle_id:
+                  type: integer
+        description: 圈子签到的请求体
+
+  /circle/circle_distance:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - 用户
+      summary: 返回账户距离对应圈子的距离
+      description: |
+        输入用户的经纬度，获取账户距离对应圈子的距离
+      parameters:
+        - in: query
+          name: id
+          description: 圈子id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: longitude
+          description: 用户所在位置的经度
+          required: true
+          schema:
+            type: number
+            format: coordinate
+            example: 120.29
+        - in: query
+          name: latitude
+          description: 用户所在位置的纬度
+          required: true
+          schema:
+            type: number
+            format: coordinate
+            example: 31.59
+      responses:
+        '200':
+          description: 返回圈子距离用户的距离
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - distance
+                properties:
+                  accounts:
+                    type: number
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /circle/circle_members:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - 用户
+      summary: 返回圈子成员的账户对象列表
+      description: |
+        获取圈子成员的帐户对象列表
+      parameters:
+        - in: query
+          name: circle_id
+          description: 圈子id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: page
+          description: 分页参数，总页码
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: count_per_page
+          description: 分页参数，每页数目
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: filters
+          description: 过滤参数
+          required: false
+          content:
+            application/json:
+              schema:
+                type: object
+      responses:
+        '200':
+          description: 返回圈子成员的账户列表
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - accounts
+                  - page_info
+                properties:
+                  accounts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Account'
+                  page_info:
+                    $ref: '#/components/schemas/PageInfo'
+        default:
+          description: 意外的错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    NotFound:
+      description: 找不到指定的资源
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Unauthorized:
+      description: 访问令牌丢失或无效
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 错误代码
+        message:
+          type: string
+          description: 错误内容
+      required:
+        - code
+        - message
+
+    PageInfo:
+      type: object
+      properties:
+        cur_page:
+          type: integer
+          description: 当前页
+        count_per_page:
+          type: integer
+          description: 每页数目
+        total_object_count:
+          type: integer
+          description: 总对象数目
+        display_pages:
+          type: integer
+          description: 呈现页数
+        has_head:
+          type: boolean
+          description: 是否拥有头部页
+        has_tail:
+          type: boolean
+          description: 是否拥有尾部页
+        has_prev:
+          type: boolean
+          description: 是否拥有前一页
+        has_next:
+          type: boolean
+          description: 是否拥有后一页
+        prev:
+          type: integer
+          description: 前页
+        next:
+          type: integer
+          description: 后页
+        max_page:
+          type: integer
+          description: 最大页码
+
+
+    UpdatedAccount:
+      type: object
+      properties:
+        name:
+          type: string
+          example: foobar
+        birthday:
+          type: string
+          format: date-time
+          example: '2016/08/29'
+        age:
+          type: integer
+        city:
+          type: string
+          example: '无锡市'
+        province:
+          type: string
+          example: '江苏省'
+        country:
+          type: string
+          example: '中国'
+        avatar:
+          type: string
+          format: url
+          example: 'https://www.mindinn.top/images/default-avatar'
+        gender:
+          type: string
+          example: 'female'
+
+    WX_Account:
+      type: object
+      required:
+        - appid
+        - code
+      properties:
+        appid:
+          type: string
+          format: wx_appid
+          example: 'wxd724f6ba5b0ab333'
+        code:
+          type: string
+          format: wx_code
+          example: '081RpTMB1HPgTc0kd7QB1ERRMB1RpTMt'
+        name:
+          type: string
+          example: foobar
+        city:
+          type: string
+          example: '无锡市'
+        province:
+          type: string
+          example: '江苏省'
+        country:
+          type: string
+          example: '中国'
+        avatar:
+          type: string
+          format: url
+          example: 'https://www.mindinn.top/images/default-avatar'
+        gender:
+          type: string
+          example: 'female'
+
+    Account:
+      type: object
+      required:
+        - id
+        - name
+        - birthday
+        - age
+        - city
+        - province
+        - country
+        - avatar
+        - gender
+        - token
+        - status
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          example: foobar
+        birthday:
+          type: string
+          format: date-time
+          example: '2016/08/29'
+        age:
+          type: integer
+        city:
+          type: string
+          example: '无锡市'
+        province:
+          type: string
+          example: '江苏省'
+        country:
+          type: string
+          example: '中国'
+        avatar:
+          type: string
+          format: url
+          example: 'https://www.mindinn.top/images/default-avatar'
+        gender:
+          type: string
+          example: 'female'
+        token:
+          type: string
+          format: JWT
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ'
+        status:
+          $ref: '#/components/schemas/Status'
+
+    Circle:
+      type: object
+      required:
+        - id
+        - name
+        - avatar
+        - longitude
+        - latitude
+        - members
+        - member_amount
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          example: foobar
+        avatar:
+          type: string
+          format: url
+          example: 'https://www.mindinn.top/images/default-avatar'
+        longitude:
+          type: number
+          format: coordinate
+          example: 120.29
+        latitude:
+          type: number
+          format: coordinate
+          example: 31.59
+        member_amount:
+          type: integer
+        members:
+          $ref: '#/components/schemas/Account'
+
+    CreatedCircle:
+      type: object
+      required:
+        - name
+        - avatar
+      properties:
+        name:
+          type: string
+          example: foobar
+        avatar:
+          type: string
+          format: url
+          example: 'https://www.mindinn.top/images/default-avatar'
+        longitude:
+          type: number
+          format: coordinate
+          example: 120.29
+        latitude:
+          type: number
+          format: coordinate
+          example: 31.59
+
+    UpdatedCircle:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          example: foobar
+        avatar:
+          type: string
+          format: url
+          example: 'https://www.mindinn.top/images/default-avatar'
+        longitude:
+          type: number
+          format: coordinate
+          example: 120.29
+        latitude:
+          type: number
+          format: coordinate
+          example: 31.59
+
+    Status:
+      required:
+        - is_checked_in
+        - duration
+      properties:
+        is_checked_in:
+          type: boolean
+          example: false
+        duration:
+          type: integer
+      type: object
