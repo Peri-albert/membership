@@ -11,12 +11,12 @@ from business.account.check_in_service import CheckInService
 @Resource('account.checked_in_account')
 class ACheckedInAccount(ApiResource):
 	"""
-	签到的用户
+	签到的账户
 	"""
 	@param_required(['user'])
 	def put(self):
 		"""
-		用户签到
+		账户签到
 		"""
 		user = self.params['user']
 		account = AccountRepository(user).get_account_by_user_id()
