@@ -928,7 +928,9 @@ components:
         member_amount:
           type: integer
         members:
-          $ref: '#/components/schemas/Account'
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
 
     CreatedCircle:
       type: object

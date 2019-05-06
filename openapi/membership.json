@@ -1229,7 +1229,10 @@
             "type" : "integer"
           },
           "members" : {
-            "$ref" : "#/components/schemas/Account"
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Account"
+            }
           }
         }
       },
