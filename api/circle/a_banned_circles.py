@@ -15,7 +15,7 @@ class ABannedCircles(ApiResource):
 	"""
 	禁用的圈子列表(限管理员操作)
 	"""
-	@param_required(['user', '?with_options', '?page:int', '?count_per_page:int', '?filters:json'])
+	@param_required(['user', '?with_options:json', '?page:int', '?count_per_page:int', '?filters:json'])
 	def get(self):
 		"""
 		获取禁用的圈子列表(限管理员操作)

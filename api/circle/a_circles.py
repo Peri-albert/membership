@@ -14,7 +14,7 @@ class ACircles(ApiResource):
 	"""
 	圈子列表
 	"""
-	@param_required(['user', '?with_options', '?page:int', '?count_per_page:int', '?filters:json'])
+	@param_required(['user', '?with_options:json', '?page:int', '?count_per_page:int', '?filters:json'])
 	def get(self):
 		"""
 		获取圈子列表
