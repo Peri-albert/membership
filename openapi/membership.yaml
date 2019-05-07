@@ -78,6 +78,18 @@ paths:
       responses:
         '200':
           description: 创建成功，返回账户的id和用户token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: 账户的id
+                  token:
+                    type: string
+                    format: JWT
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ'
         default:
           description: 意外的错误
           content:
@@ -351,6 +363,14 @@ paths:
       responses:
         '200':
           description: 创建成功，返回圈子的id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: 圈子的id
         default:
           description: 意外的错误
           content:
