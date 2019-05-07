@@ -208,6 +208,7 @@
             "application/x-www-form-urlencoded" : {
               "schema" : {
                 "type" : "object",
+                "required" : [ "circle_id" ],
                 "properties" : {
                   "circle_id" : {
                     "type" : "integer"
@@ -648,6 +649,7 @@
             "application/x-www-form-urlencoded" : {
               "schema" : {
                 "type" : "object",
+                "required" : [ "circle_id" ],
                 "properties" : {
                   "circle_id" : {
                     "type" : "integer"
@@ -815,6 +817,7 @@
             "application/x-www-form-urlencoded" : {
               "schema" : {
                 "type" : "object",
+                "required" : [ "circle_id" ],
                 "properties" : {
                   "circle_id" : {
                     "type" : "integer"
@@ -1009,6 +1012,7 @@
     "schemas" : {
       "Error" : {
         "type" : "object",
+        "required" : [ "code", "message" ],
         "properties" : {
           "code" : {
             "type" : "string",
@@ -1018,8 +1022,7 @@
             "type" : "string",
             "description" : "错误内容"
           }
-        },
-        "required" : [ "code", "message" ]
+        }
       },
       "PageInfo" : {
         "type" : "object",
@@ -1067,6 +1070,56 @@
           "max_page" : {
             "type" : "integer",
             "description" : "最大页码"
+          }
+        }
+      },
+      "Account" : {
+        "type" : "object",
+        "required" : [ "id", "name", "birthday", "age", "city", "province", "country", "avatar", "gender", "token", "status" ],
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "name" : {
+            "type" : "string",
+            "example" : "foobar"
+          },
+          "birthday" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2016/08/29"
+          },
+          "age" : {
+            "type" : "integer"
+          },
+          "city" : {
+            "type" : "string",
+            "example" : "无锡市"
+          },
+          "province" : {
+            "type" : "string",
+            "example" : "江苏省"
+          },
+          "country" : {
+            "type" : "string",
+            "example" : "中国"
+          },
+          "avatar" : {
+            "type" : "string",
+            "format" : "url",
+            "example" : "https://www.mindinn.top/images/default-avatar"
+          },
+          "gender" : {
+            "type" : "string",
+            "example" : "female"
+          },
+          "token" : {
+            "type" : "string",
+            "format" : "JWT",
+            "example" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/Status"
           }
         }
       },
@@ -1146,56 +1199,6 @@
           "gender" : {
             "type" : "string",
             "example" : "female"
-          }
-        }
-      },
-      "Account" : {
-        "type" : "object",
-        "required" : [ "id", "name", "birthday", "age", "city", "province", "country", "avatar", "gender", "token", "status" ],
-        "properties" : {
-          "id" : {
-            "type" : "integer"
-          },
-          "name" : {
-            "type" : "string",
-            "example" : "foobar"
-          },
-          "birthday" : {
-            "type" : "string",
-            "format" : "date-time",
-            "example" : "2016/08/29"
-          },
-          "age" : {
-            "type" : "integer"
-          },
-          "city" : {
-            "type" : "string",
-            "example" : "无锡市"
-          },
-          "province" : {
-            "type" : "string",
-            "example" : "江苏省"
-          },
-          "country" : {
-            "type" : "string",
-            "example" : "中国"
-          },
-          "avatar" : {
-            "type" : "string",
-            "format" : "url",
-            "example" : "https://www.mindinn.top/images/default-avatar"
-          },
-          "gender" : {
-            "type" : "string",
-            "example" : "female"
-          },
-          "token" : {
-            "type" : "string",
-            "format" : "JWT",
-            "example" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
-          },
-          "status" : {
-            "$ref" : "#/components/schemas/Status"
           }
         }
       },
